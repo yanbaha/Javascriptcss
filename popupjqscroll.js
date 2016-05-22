@@ -1,52 +1,184 @@
-/*
-	@author: Ilyas karim ilyas.datoo@gmail.com
-	@date: 5/may/2016
+/* ===========================================================
+ * jquery-subscribe-better.js v1
+ * ===========================================================
+ * Copyright 2014 Pete Rojwongsuriya.
+ * http://www.thepetedesign.com
+ *
+ * Create a better, highly customizable subscription modal or
+ * newsletter signup window with jQuery Subscribe Better
+ *
+ * https://github.com/peachananr/subscribe-better
+ *
+ * ========================================================== */
 
-*/
-(function ($) {
-	setInterval(function(){
-		$(".navbar-brand").html($(document).width());
-	},10)
-	$.fn.jPopup = function (options) {
-		var settings = $.extend({
-			popupParent : "gee-popup",
-			scrollTopPx : 100,
-			popupCloseButton : ".popup-close-button",
-			heading : "heading - You can change",
-			paragraph : "You can change paragraph from options. You can also change the input into your own template",
-			userContent : '<div class="input"> <input class="form-control" type="text" placeholder="Your Email" > </div>',
-			buttonText : 'Click me',
-			buttonClass : "btn btn-info btn-block btn-lg",
-			// openPopup : "asd",
-			initThrough : function () {
-				$(window).on('scroll', function(event) {
-					var scrollValue = $(window).scrollTop();
-					if (scrollValue == settings.scrollTopPx || scrollValue > settings.scrollTopPx) {
-						// call the popup
-						if (hasPopuped == false) {
-							$.fn.jPopup.openPopup();
-						}
-					}
-				});
-			},
-			openPopup : function () {
-				$("html").addClass('active-poup');
-			}
-		}, options);
-		var hasPopuped = false;
-		var scrollValue = $(window).scrollTop();
-		settings.initThrough();
-		$(".gee-popup .popup-title").html(settings.heading);
-		$(".gee-popup .paragraph").html(settings.paragraph);
-		$(".gee-popup .user-content").html(settings.userContent);
-		$(".gee-popup .btn").html(settings.buttonText);
-		$(".gee-popup .btn").addClass(settings.buttonClass);
-		$(".popup-close-button").click(function() {
-			$('html').toggleClass('active-poup');
-			hasPopuped = true;
-		});
-	}
-	$.fn.jPopup.openPopup = function () {
-		$("html").addClass('active-poup');
-	}
-}(jQuery))
+!function($){
+
+  var defaults = {
+    trigger: "atendpage", // atendpage | onload | onidle
+    animation: "fade", // fade | flyInRight | flyInLeft | flyInUp | flyInDown
+    delay: 0,
+    showOnce: true,
+    autoClose: false,
+    scrollableModal: false
+	};
+
+  $.fn.subscribeBetter = function(options){
+    var settings = $.extend({}, defaults, options),
+        el = $(this),
+        shown = false,
+        animating = false;
+
+    el.addClass("sb");
+
+    $.fn.openWindow = function() {
+      var el = $(this);
+      if(el.is(":hidden") && shown == false && animating == false) {
+        animating = true;
+
+        setTimeout(function() {
+          if (settings.scrollableModal == true) {
+            if($(".sb-overlay").length < 1) {
+              $("body").append("<div class='sb-overlay'><div class='sb-close-backdrop'></div><div class='sb sb-withoverlay'>" + $(".sb").html() + "</div></div>");
+              $(".sb-close-backdrop, .sb-close-btn").one("click", function() {
+                $(".sb.sb-withoverlay").closeWindow();
+                return false;
+              });
+              $(".sb.sb-withoverlay").removeClass("sb-animation-" + settings.animation.replace('In', 'Out')).addClass("sb-animation-" + settings.animation);
+              setTimeout(function(){
+                $(".sb.sb-withoverlay").show();
+                $("body").addClass("sb-open sb-open-with-overlay");
+              }, 300);
+            }
+          } else {
+            if ($(".sb-overlay").length < 1) {
+              $("body").append("<div class='sb-overlay'><div class='sb-close-backdrop'></div></div>");
+              $(".sb").removeClass("sb-animation-" + settings.animation.replace('In', 'Out')).addClass("sb-animation-" + settings.animation);
+              $(".sb-close-backdrop, .sb-close-btn").one("click", function() {
+                $(".sb").closeWindow();
+                return false;
+              });
+              setTimeout(function(){
+                $(".sb").show();
+                $("body").addClass("sb-open");
+              }, 300);
+            }
+
+          }
+          if (settings.showOnce == true) shown = true;
+          animating = false;
+        }, settings.delay);
+      }
+    }
+
+    $.fn.closeWindow = function() {
+      var el = $(this);
+      if(el.is(":visible") && animating == false) {
+        animating = true;
+        if (settings.scrollableModal == true) {
+
+          $(".sb.sb-withoverlay").removeClass("sb-animation-" + settings.animation).addClass("sb-animation-" + settings.animation.replace('In', 'Out'));
+
+          setTimeout(function(){
+            $(".sb.sb-withoverlay").hide();
+            $("body").removeClass("sb-open sb-open-with-overlay");
+            setTimeout(function() {
+              $(".sb-overlay").remove();
+            }, 300);
+          }, 300);
+
+        } else {
+
+          $(".sb").removeClass("sb-animation-" + settings.animation).addClass("sb-animation-" + settings.animation.replace('In', 'Out'));
+          setTimeout(function(){
+            $(".sb").hide();
+            $("body").removeClass("sb-open");
+            setTimeout(function() {
+              $(".sb-overlay").remove();
+            }, 300);
+          }, 300);
+        }
+        animating = false;
+      }
+    }
+
+    $.fn.scrollDetection = function (trigger, onDone) {
+      var t, l = (new Date()).getTime();
+
+      $(window).scroll(function(){
+          var now = (new Date()).getTime();
+
+          if(now - l > 400){
+              $(this).trigger('scrollStart');
+              l = now;
+          }
+
+          clearTimeout(t);
+          t = setTimeout(function(){
+              $(window).trigger('scrollEnd');
+          }, 300);
+      });
+      if (trigger == "scrollStart") {
+        $(window).bind('scrollStart', function(){
+          $(window).unbind('scrollEnd');
+          onDone();
+        });
+      }
+
+      if (trigger == "scrollEnd") {
+        $(window).bind('scrollEnd', function(){
+          $(window).unbind('scrollStart');
+          onDone();
+        });
+      }
+    }
+
+    switch(settings.trigger) {
+      case "atendpage":
+        $(window).scroll(function(){
+          var yPos = $(window).scrollTop();
+          if (yPos >= ($(document).height() - $(window).height()) ) {
+            el.openWindow();
+          } else {
+            if (yPos + 300 < ($(document).height() - $(window).height()) ) {
+              if(settings.autoClose == true) {
+                el.closeWindow();
+              }
+            }
+          }
+
+        });
+        break;
+      case "onload":
+
+        $(window).load(function(){
+          el.openWindow();
+          if(settings.autoClose == true) {
+            el.scrollDetection("scrollStart", function() {
+              el.closeWindow();
+            });
+
+          }
+        });
+
+        break;
+      case "onidle":
+
+        $(window).load(function(){
+          el.scrollDetection("scrollEnd", function() {
+            el.openWindow();
+          });
+
+          if(settings.autoClose == true) {
+              el.scrollDetection("scrollStart", function() {
+                el.closeWindow();
+              });
+          }
+        });
+
+        break;
+    }
+
+
+  }
+
+}(window.jQuery);
