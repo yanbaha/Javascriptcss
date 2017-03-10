@@ -1,20 +1,20 @@
 /* var gallery_config = {
 	url: 'http://dte-feed.blogspot.com',
-	numPost: 5,
+	numPost: 3,
 	labelName: null,
 	monthArray: [
-"يناير",
-        "فبراير",
-        "مارس",
-        "ابريل",
-        "ماي",
-        "يونيو",
-        "يوليوز",
-        "غشت",
-        "سبتمبر",
-        "أكتوبر",
-        "نوفمبر",
-        "ديسمبر"
+		"Januari",
+		"Februari",
+		"Maret",
+		"April",
+		"Mei",
+		"Juni",
+		"Juli",
+		"Agustus",
+		"September",
+		"Oktober",
+		"November",
+		"Desember"
 	],
 	noImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAA3NCSVQICAjb4U/gAAAADElEQVQImWOor68HAAL+AX7vOF2TAAAAAElFTkSuQmCC',
 	newTabLink: false,
@@ -25,7 +25,7 @@
 		prevText: '&lt;',
 		nextText: '&gt;',
 		current: 0,
-		autoplay: true,
+		autoplay: false,
 		interval: 2000
 	}
 }; */
