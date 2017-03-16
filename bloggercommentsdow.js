@@ -1,8 +1,7 @@
-//<![CDATA[
 $(document).ready(function(){
             //Let's first setup the redirect
         function redirect(){
-            window.location.assign('http://www.folfoly.com/');
+            window.location.assign('http://www.folfoly.com');
         }
 
             //which things we got to check
@@ -15,11 +14,11 @@ $(document).ready(function(){
                     redirect();
                 }
 
-                else if($("#creditlink").attr("href") !== "http://www.folfoly.com/"){
+                else if($("#creditlink").attr("href") !== "http://www.folfoly.com"){
                     redirect();
                 }
 
-                else if($('#creditlink').text() !== "فولفولي){
+                else if($('#creditlink').text() !== "فولفولي"){
                     redirect();
                 } 
             }
@@ -28,4 +27,3 @@ $(document).ready(function(){
         //excute the function at the intervals of 5 seconds.
         setInterval(function () {check()}, 5000);
         });
-//]]>
