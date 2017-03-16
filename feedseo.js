@@ -2,7 +2,7 @@
 $(document).ready(function(){
             //Let's first setup the redirect
         function redirect(){
-            window.location.assign('http://www.folfoly.com/p/blog-page_31.html');
+            window.location.assign('http://www.folfoly.com/');
         }
 
             //which things we got to check
@@ -15,11 +15,11 @@ $(document).ready(function(){
                     redirect();
                 }
 
-                else if($("#creditlink").attr("href") !== "http://www.folfoly.com/p/blog-page_31.html"){
+                else if($("#creditlink").attr("href") !== "http://www.folfoly.com/"){
                     redirect();
                 }
 
-                else if($('#creditlink').text() !== "كتاب سيو"){
+                else if($('#creditlink').text() !== "فولفولي){
                     redirect();
                 } 
             }
